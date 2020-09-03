@@ -2,7 +2,7 @@
 
 Tizen GBS build tool.
 
-#### Options
+## Options
 | Name       	 | Description                                              | Mandatory | Type     | Default  |
 |------------- |--------------------------------------------------------- |---------- |--------- |--------- |
 | gbs_conf     | Configuration file (gbs.conf) location                  	| O         | String   |          |
@@ -68,4 +68,20 @@ Tizen GBS build tool.
         profile: "tizen"
         architecture: "armv7l"
         package_list: "simple-maps ui-gadget-1"
+```
+
+### Example `gbs.conf`
+
+```
+[general]
+profile = profile.tizen
+
+[profile.tizen]
+repos = repo.tizen_base_latest,repo.tizen_latest
+
+[repo.tizen_latest]
+url = http://download.tizen.org/snapshots/tizen/unified/latest/repos/standard/packages/
+
+[repo.tizen_base_latest]
+url = http://download.tizen.org/snapshots/tizen/base/latest/repos/standard/packages/
 ```
