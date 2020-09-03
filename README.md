@@ -8,7 +8,7 @@ Tizen GBS build tool.
 | gbs_conf     | Configuration file (gbs.conf) location                  	| O         | String   |          |
 | debug        | debug output                                            	|           | Boolean  | false    |
 | verbose      | verbose output       	                                   |           | Boolean  | false    |
-| profile      | Profile to be used for build (string from gbs.conf)     	| O         |          |          |
+| profile      | Profile to be used for build (string from gbs.conf)     	|           |          |          |
 | architecture | Target architecture to build.                            | O         |          |          |
 | define_macro | Macros       	                                           |           | String   | ""       |
 | build_conf   | Project build configuration file                       	 |           | String   | ""       |
