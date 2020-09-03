@@ -1,0 +1,120 @@
+name: Build Tizen packages with gbs
+description: Builds Tizen packages
+author: Hyokeun Jeon <hyokeun@gmail.com>
+branding:
+  icon: 'aperture'
+  color: 'blue'
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    ## global options
+    - ${{ inputs.gbs_conf }}
+    - ${{ inputs.debug }}
+    - ${{ inputs.verbose }}
+    ## build configuration options
+    - ${{ inputs.profile }}
+    - ${{ inputs.architecture }}
+    - ${{ inputs.define_macro }}
+    - ${{ inputs.build_conf }}
+    - ${{ inputs.baselibs }}
+    ## build env options
+    - ${{ inputs.clean }}
+    - ${{ inputs.clean_once }}
+    - ${{ inputs.fail_fast }}
+    - ${{ inputs.vm_memory }}
+    - ${{ inputs.vm_disk }}
+    - ${{ inputs.vm_swap }}
+    - ${{ inputs.vm_diskfilesystem }}
+    - ${{ inputs.full_build }}
+    - ${{ inputs.deps_build }}
+    - ${{ inputs.threads }}
+    ## output directory
+    - ${{ inputs.output_dir }}
+    ## package directory list
+    - ${{ inputs.package_list }}
+
+inputs:
+  ## global options
+  gbs_conf:
+    description: Configuration file (gbs.conf) location
+    required: true
+  debug:
+    description: debug output
+    required: false
+    default: false
+  verbose:
+    description: verbose output
+    required: false
+    default: false
+
+  ## build configuration options
+  profile:
+    description: Profile to be used for build (string from gbs.conf)
+    required: true
+  architecture:
+    description: Target architecture to build. (x86_64, i586, armv6l, armv7hl, armv7l, aarch64, mips, mipsel)
+    required: true
+  define_macro:
+    description: Macros
+    required: false
+    default: ""
+  build_conf:
+    description: Project build configuration file
+    required: false
+    default: ""
+  baselibs:
+    description: Create -32bit/-64bit/-x86 rpms for other architectures
+    required: false
+    default: false
+
+  ## build env options
+  clean:
+    description: Delete old build root before initialization
+    required: false
+    default: false
+  clean_once:
+    description: Clean the build environment only once when you start building multiple packages
+    required: false
+    default: false
+  fail_fast:
+    description: Stop build if one of packages fails
+    required: false
+    default: false
+  vm_memory:
+    description: The memory size of kvm machine
+    required: false
+    default: 0
+  vm_disk:
+    description: The disk size of kvm machine
+    required: false
+    default: 0
+  vm_swap:
+    description: The swap size of kvm machine
+    required: false
+    default: 0
+  vm_diskfilesystem:
+    description: The filesystem type of kvm machine
+    required: false
+    default: 0
+  full_build:
+    description: Download all the package sources except local package in gbs.conf and do build
+    required: false
+    default: false
+  deps_build:
+    description: Download packages depends on local package from gbs.conf and do build
+    required: false
+    default: false
+  threads:
+    description: Number of threads to build multiple packages in parallel
+    required: false
+    default: 0
+  output_dir:
+    description: Output directory
+    required: false
+    default: ""
+  package_list:
+    description: Package directory list
+    required: false
+    default: ""
