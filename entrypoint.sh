@@ -55,10 +55,14 @@ DEFAULT_GBS_ROOT=/usr/workspace/GBS-ROOT
 
 gbs -d -v $gbs_conf build ${GITHUB_WORKSPACE} -B ${DEFAULT_GBS_ROOT} $profile $architecture $build_options $clean_options $dep_options $threads
 
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
 [ -d "_git" ] && mv _git .git
 
 if [ ! -z ${OUTPUT_DIR} ]; then
   ugid=$(stat -c "%u:%g" ${GITHUB_WORKSPACE})
-  chown -R ugid ${DEFAULT_GBS_ROOT}/local/repos/
+  chown -R ${ugid} ${DEFAULT_GBS_ROOT}/local/repos/
   cp -rf ${DEFAULT_GBS_ROOT}/local/repos/${PROFILE}/* ${OUTPUT_DIR}/
 fi
