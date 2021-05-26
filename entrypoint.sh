@@ -27,7 +27,7 @@ deps_build=""; if [ ${17} = "true" ]; then deps_build="--deps-build"; fi
 threads=""; if [ ${18} -ne 0 ]; then threads="--threads ${18}"; fi
 
 ## output
-OUTPUT_DIR=${GITHUB_WORKSPACE}/.gbs_build_output
+OUTPUT_DIR=
 if [ ! -z ${19} ]; then OUTPUT_DIR="${19}"; fi
 
 ## Package directory list
@@ -51,8 +51,14 @@ build_options="$define_macro $build_conf $baselibs"
 clean_options="$clean $clean_once $fail_fast"
 dep_options="$full_build $deps_build"
 
-gbs -d -v $gbs_conf build ${GITHUB_WORKSPACE} $profile $architecture $build_options $clean_options $dep_options $threads
+DEFAULT_GBS_ROOT=/usr/workspace/GBS-ROOT
+
+gbs -d -v $gbs_conf build ${GITHUB_WORKSPACE} -B ${DEFAULT_GBS_ROOT} $profile $architecture $build_options $clean_options $dep_options $threads
 
 [ -d "_git" ] && mv _git .git
 
-${DEFAULT_GBS_ROOT}/${PROFILE}/. ${OUTPUT_DIR}
+if [ ! -z ${OUTPUT_DIR} ]; then
+  ugid=$(stat -c "%u:%g" ${GITHUB_WORKSPACE})
+  chown -R ugid ${DEFAULT_GBS_ROOT}/local/repos/
+  cp -rf ${DEFAULT_GBS_ROOT}/local/repos/${PROFILE}/* ${OUTPUT_DIR}/
+fi
