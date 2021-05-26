@@ -2,10 +2,6 @@
 
 set -x
 
-DOCKER_IMAGE=retzero/tizen_gbs:latest
-CONTAINER_NAME=builder_ct
-DEFAULT_GBS_ROOT=/root/GBS-ROOT/local/repos
-
 ## global options
 gbs_conf=""; if [ ! -z $1 ]; then gbs_conf="-c $1"; fi
 debug=""; if [ $2 = "true" ]; then debug="--debug"; fi
@@ -51,23 +47,12 @@ if [ ! -z "${20}" ]; then
   done
 fi
 
-docker pull ${DOCKER_IMAGE}
-
-docker run -id --privileged --name ${CONTAINER_NAME} --workdir ${GITHUB_WORKSPACE} ${DOCKER_IMAGE}
-
-# FIXME: Try volume mounting in DinD instead of copy files.
-docker cp ${GITHUB_WORKSPACE}/. ${CONTAINER_NAME}:${GITHUB_WORKSPACE}
-
 build_options="$define_macro $build_conf $baselibs"
 clean_options="$clean $clean_once $fail_fast"
 dep_options="$full_build $deps_build"
-docker exec -i ${CONTAINER_NAME} gbs -d -v $gbs_conf build $profile $architecture $build_options $clean_options $dep_options $threads
+
+gbs -d -v $gbs_conf build ${GITHUB_WORKSPACE} $profile $architecture $build_options $clean_options $dep_options $threads
 
 [ -d "_git" ] && mv _git .git
 
-# Copy build artifacts back to host container
-docker cp ${CONTAINER_NAME}:${DEFAULT_GBS_ROOT}/${PROFILE}/. ${OUTPUT_DIR}
-
-docker stop ${CONTAINER_NAME}
-
-docker rm ${CONTAINER_NAME}
+${DEFAULT_GBS_ROOT}/${PROFILE}/. ${OUTPUT_DIR}
